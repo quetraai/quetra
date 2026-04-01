@@ -1,6 +1,6 @@
 {
   "name": "@quetra/mcp",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "QuetraAI MCP server — AI agent governance as MCP tools",
   "license": "MIT",
   "type": "module",
@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
-    "@quetra/sdk": "^0.1.4",
+    "@quetra/sdk": "^0.1.5",
     "zod": "^3.24.0"
   },
   "devDependencies": {

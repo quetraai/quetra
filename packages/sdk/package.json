@@ -1,6 +1,6 @@
 {
   "name": "@quetra/sdk",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Client SDK for QuetraAI — mandate-governed spending for AI agents",
   "license": "MIT",
   "type": "module",
@@ -43,7 +43,7 @@
     "check": "tsc --noEmit"
   },
   "dependencies": {
-    "@quetra/core": "^0.1.2"
+    "@quetra/core": "^0.1.3"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
