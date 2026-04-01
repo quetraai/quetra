@@ -1,0 +1,52 @@
+{
+  "name": "@quetra/core",
+  "version": "0.1.2",
+  "description": "Types, rule engine, and Ed25519 signing for QuetraAI mandate governance",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "homepage": "https://quetra.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quetraai/quetra"
+  },
+  "keywords": [
+    "quetra",
+    "ai-agents",
+    "governance",
+    "mandate",
+    "policy-engine",
+    "ed25519"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@noble/ed25519": "^2.2.0",
+    "@noble/hashes": "^1.7.0",
+    "json-logic-js": "^2.0.5"
+  },
+  "devDependencies": {
+    "@types/json-logic-js": "^2.0.7",
+    "@types/node": "^22.0.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "name": "@quetra/sdk",
+  "version": "0.1.4",
+  "description": "Client SDK for QuetraAI — mandate-governed spending for AI agents",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./crypto": {
+      "types": "./dist/crypto.d.ts",
+      "import": "./dist/crypto.js"
+    }
+  },
+  "homepage": "https://quetra.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quetraai/quetra"
+  },
+  "keywords": [
+    "quetra",
+    "sdk",
+    "ai-agents",
+    "payments",
+    "x402",
+    "mandate",
+    "governance"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run --passWithNoTests",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@quetra/core": "^0.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

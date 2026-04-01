@@ -1,0 +1,14 @@
+{
+  "name": "quetra",
+  "private": true,
+  "description": "Programmable spending governance for AI agents",
+  "homepage": "https://quetra.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quetraai/quetra"
+  },
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ]
+}
