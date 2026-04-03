@@ -15,6 +15,20 @@ export function evaluateMandate(mandate: Mandate, context: EvaluationContext): E
   const evaluations: RuleEvaluation[] = [];
   let requiresApproval: EvaluationResult['requiresApproval'];
 
+  // Currency mismatch check (run before everything else)
+  if (context.currency && mandate.budget.currency) {
+    const txCurrency = context.currency;
+    const mandateCurrency = mandate.budget.currency;
+    if (txCurrency !== mandateCurrency) {
+      evaluations.push({
+        ruleType: 'currency_mismatch',
+        passed: false,
+        detail: `Currency mismatch: transaction is ${txCurrency} but mandate budget is ${mandateCurrency}`,
+      });
+      return { allowed: false, evaluations };
+    }
+  }
+
   // Budget checks (always run first)
   evaluations.push(evaluatePerTransactionBudget(mandate, context));
   evaluations.push(evaluateTotalBudget(mandate, context));
@@ -86,6 +100,8 @@ function evaluateRule(rule: MandateRule, context: EvaluationContext): RuleEvalua
       return evaluateRateLimit(rule, context);
     case 'approval':
       return evaluateApproval(rule, context);
+    case 'protocol_restrict':
+      return evaluateProtocolRestrict(rule.allowed, context);
     case 'custom':
       return evaluateCustom(rule, context);
   }
@@ -210,6 +226,25 @@ function evaluateApproval(
     detail: needsApproval
       ? `$${fmt(context.amount)} > $${fmt(rule.threshold)} threshold — requires human approval`
       : `$${fmt(context.amount)} <= $${fmt(rule.threshold)} threshold — auto-approved`,
+  };
+}
+
+function evaluateProtocolRestrict(allowed: string[], context: EvaluationContext): RuleEvaluation {
+  if (!context.protocol) {
+    return {
+      ruleType: 'protocol_restrict',
+      passed: false,
+      detail: `No protocol provided; allowed: [${allowed.join(', ')}]`,
+    };
+  }
+
+  const passed = allowed.includes(context.protocol);
+  return {
+    ruleType: 'protocol_restrict',
+    passed,
+    detail: passed
+      ? `${context.protocol} in [${allowed.join(', ')}]`
+      : `${context.protocol} not in [${allowed.join(', ')}]`,
   };
 }
 

@@ -171,11 +171,11 @@ export function createQuetraMCPServer(config: QuetraMCPConfig): McpServer {
     'quetra_evaluate',
     {
       description:
-        'Evaluate whether a payment/spend is allowed under your current mandate. Call this BEFORE making any purchase or API call that costs money.',
+        'Evaluate whether a payment/spend is allowed under your current mandate. Call this BEFORE making any purchase or API call that costs money. Supports USDC, USD, and EUR currencies — the transaction currency must match the mandate currency.',
       inputSchema: {
         vendor: z.string().describe('Vendor/merchant name or domain'),
         amount: z.number().describe('Amount in dollars (e.g., 5.00 for $5)'),
-        currency: z.string().default('USDC').describe('Currency code'),
+        currency: z.string().default('USD').describe('Currency code (USD, EUR, or USDC). Must match the mandate currency.'),
         category: z.string().optional().describe('Spending category'),
         description: z.string().optional().describe('Transaction description'),
         mandateId: z.string().optional().describe('Specific mandate ID (auto-resolved if omitted)'),

@@ -1,3 +1,8 @@
+// ── Currency ──────────────────────────────────────────────
+
+/** Supported currencies. USDC is for x402 crypto payments. Fiat currencies match Stripe settlement currencies. */
+export type Currency = 'USDC' | 'USD' | 'EUR' | 'GBP' | 'CAD' | 'AUD' | 'JPY' | 'CHF' | 'SEK' | 'NOK' | 'DKK' | 'SGD' | 'HKD' | 'NZD' | 'BRL' | 'MXN' | 'INR' | (string & {});
+
 // ── Organization ──────────────────────────────────────────
 
 export interface Organization {
@@ -6,7 +11,7 @@ export interface Organization {
   slug: string;
   publicKey: string;
   encryptedPrivateKey: string;
-  defaultCurrency: 'USDC';
+  defaultCurrency: Currency;
   timezone: string;
   webhookUrl?: string;
   plan: 'free' | 'pro' | 'enterprise';
@@ -78,7 +83,7 @@ export interface MandateBudget {
   perTransaction: number;
   /** Amount spent so far in cents. */
   spent: number;
-  currency: 'USDC' | 'USD';
+  currency: Currency;
   resetInterval?: {
     period: 'daily' | 'weekly' | 'monthly';
     lastResetAt: Date;
@@ -101,6 +106,7 @@ export type MandateRule =
   | TimeWindowRule
   | ApprovalRule
   | RateLimitRule
+  | ProtocolRestrictRule
   | CustomRule;
 
 export interface CategoryRule {
@@ -139,6 +145,11 @@ export interface RateLimitRule {
   windowMinutes: number;
 }
 
+export interface ProtocolRestrictRule {
+  type: 'protocol_restrict';
+  allowed: ('x402' | 'acp' | 'ap2' | 'kyapay' | 'direct' | 'stripe_cc')[];
+}
+
 export interface CustomRule {
   type: 'custom';
   engine: 'jsonlogic';
@@ -160,7 +171,7 @@ export interface MandateToken {
     perTransaction: number;
     /** Remaining budget in cents. */
     remaining: number;
-    currency: 'USDC' | 'USD';
+    currency: Currency;
   };
   policyHash: string;
   signature: string;
@@ -180,7 +191,7 @@ export interface TransactionRecord {
   vendor: string;
   /** Transaction amount in cents. $5.00 = 500. */
   amount: number;
-  currency: 'USDC' | 'USD';
+  currency: Currency;
   category?: string;
   description?: string;
   protocol: 'x402' | 'acp' | 'ap2' | 'kyapay' | 'direct' | 'stripe_cc';
@@ -220,6 +231,10 @@ export interface EvaluationContext {
   amount: number;
   vendor: string;
   category?: string;
+  /** Currency of the transaction. If provided and mandate has a different currency, evaluation is rejected. */
+  currency?: Currency;
+  /** Payment protocol. If provided and mandate has a protocol_restrict rule, evaluated against allowed list. */
+  protocol?: 'x402' | 'acp' | 'ap2' | 'kyapay' | 'direct' | 'stripe_cc';
   timestamp: Date;
   recentTransactionCount: number;
 }

@@ -1,6 +1,6 @@
 {
   "name": "@quetra/core",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Types, rule engine, and Ed25519 signing for QuetraAI mandate governance",
   "license": "MIT",
   "type": "module",

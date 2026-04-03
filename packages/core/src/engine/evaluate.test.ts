@@ -243,6 +243,47 @@ describe('evaluateMandate', () => {
     });
   });
 
+  describe('protocol_restrict rule', () => {
+    it('should approve when protocol matches allowed list', () => {
+      const rules: MandateRule[] = [{ type: 'protocol_restrict', allowed: ['x402'] }];
+      const mandate = createMandate({ rules });
+      const context = createContext({ protocol: 'x402' });
+      const result = evaluateMandate(mandate, context);
+
+      expect(result.allowed).toBe(true);
+      expect(result.evaluations.find((e) => e.ruleType === 'protocol_restrict')?.passed).toBe(true);
+    });
+
+    it('should reject when protocol is not in allowed list', () => {
+      const rules: MandateRule[] = [{ type: 'protocol_restrict', allowed: ['x402'] }];
+      const mandate = createMandate({ rules });
+      const context = createContext({ protocol: 'acp' });
+      const result = evaluateMandate(mandate, context);
+
+      expect(result.allowed).toBe(false);
+      expect(result.evaluations.find((e) => e.ruleType === 'protocol_restrict')?.passed).toBe(false);
+    });
+
+    it('should reject when no protocol is provided', () => {
+      const rules: MandateRule[] = [{ type: 'protocol_restrict', allowed: ['x402'] }];
+      const mandate = createMandate({ rules });
+      const context = createContext(); // no protocol
+      const result = evaluateMandate(mandate, context);
+
+      expect(result.allowed).toBe(false);
+      expect(result.evaluations.find((e) => e.ruleType === 'protocol_restrict')?.passed).toBe(false);
+    });
+
+    it('should approve when protocol is one of multiple allowed', () => {
+      const rules: MandateRule[] = [{ type: 'protocol_restrict', allowed: ['x402', 'acp'] }];
+      const mandate = createMandate({ rules });
+      const context = createContext({ protocol: 'acp' });
+      const result = evaluateMandate(mandate, context);
+
+      expect(result.allowed).toBe(true);
+    });
+  });
+
   describe('combined rules', () => {
     it('should require ALL rules to pass', () => {
       const rules: MandateRule[] = [

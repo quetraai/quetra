@@ -6,8 +6,6 @@ export type {
   EvaluateResponse,
   MandateInfo,
   QuetraClientConfig,
-  StripeCCChargeRequest,
-  StripeCCChargeResult,
   TransactionFilters,
 } from './client.js';
 export { QuetraClient } from './client.js';

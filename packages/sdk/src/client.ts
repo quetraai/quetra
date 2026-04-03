@@ -99,28 +99,6 @@ export interface ACPCheckoutResult {
   reasons?: Array<{ rule: string; passed: boolean; detail: string }>;
 }
 
-export interface StripeCCChargeRequest {
-  vendor: string;
-  /** Amount in cents. $5.00 = 500. */
-  amount: number;
-  currency?: string;
-  category?: string;
-  description?: string;
-  stripeCustomerId?: string;
-  metadata?: Record<string, string>;
-}
-
-export interface StripeCCChargeResult {
-  approved: boolean;
-  transactionId?: string;
-  paymentIntentId?: string;
-  clientSecret?: string;
-  /** Remaining budget in cents after charge. */
-  budgetRemaining?: number;
-  evaluations?: Array<{ ruleType: string; passed: boolean; detail: string }>;
-  reasons?: Array<{ rule: string; passed: boolean; detail: string }>;
-}
-
 const DEFAULT_GATEWAY_URL = 'https://gateway.quetra.dev';
 const DEFAULT_TIMEOUT = 5000;
 const DEFAULT_RETRIES = 2;
@@ -195,7 +173,7 @@ export class QuetraClient {
         paymentRequest: {
           vendor: request.vendor,
           amount: request.amount,
-          currency: request.currency ?? 'USDC',
+          currency: request.currency ?? 'USD',
           category: request.category,
           description: request.description,
         },
@@ -324,19 +302,6 @@ export class QuetraClient {
    */
   async acpCheckout(request: ACPCheckoutRequest): Promise<ACPCheckoutResult> {
     return this.request<ACPCheckoutResult>('/api/v1/gateway/acp/authorize', {
-      method: 'POST',
-      body: JSON.stringify(request),
-    });
-  }
-
-  /**
-   * Stripe CC charge — evaluate a payment against the mandate and create a PaymentIntent.
-   *
-   * If approved, returns a PaymentIntent client secret that can be used client-side
-   * to complete the charge via Stripe.js. Budget is decremented at authorization time.
-   */
-  async stripeCharge(request: StripeCCChargeRequest): Promise<StripeCCChargeResult> {
-    return this.request<StripeCCChargeResult>('/api/v1/gateway/stripe/charge', {
       method: 'POST',
       body: JSON.stringify(request),
     });
